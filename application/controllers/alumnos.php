@@ -33,11 +33,48 @@
 			$tabla=$this->table->generate();
 			return $tabla;
 		}
-		public function alta()
+		public function alta($opcion=0)
 		{
 			$this->load->helper('form');
+			$this->load->model('alumno_model','alumno',TRUE);
+
+			$datos['dni']=$this->input->post('dni');
+			$datos['nombre']=$this->input->post('nombre');
+			$datos['apellido']=$this->input->post('apellido');
+			$datos['direccion']=$this->input->post('direccion');
+			$datos['telefono']=$this->input->post('telefono');
+			$datos['correo']=$this->input->post('correo');
+			$datos['fechanac']=$this->input->post('fechanac');
+			if ($opcion==1)
+			{
+			$datos['id']=$this->input->post('id');
+			$this->alumno->updateAlumno($datos);
+			}
+			else
+			$this->alumno->insertarAlumno($datos);
+
+
 			$variables['vista']='alta';
+			$variables['form_config'] = array('id' => 'form_alumno');
 			$this->load->view('alumnos',$variables);
+		}
+
+		public function modificar ($id_alumno)
+		{
+			$this->load->helper('form');
+			$this->load->model('alumno_model','alumno',TRUE);
+			$variables['vista']='modificacion';
+			$variables['form_config'] = array('id' => 'form_alumno');
+			$alumno=$this->alumno->dameAlumnoId($id_alumno);
+			$variables['alumno']=$alumno;
+			$this->load->view('alumnos',$variables);
+		}
+
+		public function eliminar($id_alumno)
+		{
+			$this->load->model('alumno_model','alumno',TRUE);
+			$this->alumno->eliminarAlumno($id_alumno);
+			$this->index();
 		}
 	
 	}
